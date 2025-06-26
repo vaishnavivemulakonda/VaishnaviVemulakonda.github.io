@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> ✨ Tic-Tac-Toe Showdown</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background-blobs"></div>
+
+  <div class="container">
+    <h1 class="glow-header">✨ Tic-Tac-Toe Showdown ❄️</h1>
+    <p id="statusText" class="status-text">🔥 Player X's Turn</p>
+
+    <!-- 🏆 Scoreboard -->
+    <div class="scoreboard">
+      <span id="scoreX">🔥 X: 0</span>
+      <span id="scoreO">❄️ O: 0</span>
+    </div>
+
+    <div id="gameBoard" class="board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+
+    <button id="restartBtn">🔄 Play Again</button>
+  </div>
+
+  <!-- 🌈 Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

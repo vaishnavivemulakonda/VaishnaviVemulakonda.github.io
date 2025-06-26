@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌟 Magical To-Do App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+      color: #2e2e2e;
+      display: flex; justify-content: center; align-items: center;
+      flex-direction: column;
+      min-height: 100vh; padding: 20px;
+      overflow-x: hidden;
+      animation: fadeIn 1.2s ease-in;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .todo-container {
+      background: rgba(245, 191, 234, 0.95);
+      padding: 30px; border-radius: 25px;
+      width: 100%; max-width: 600px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 1;
+    }
+
+     h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 30px;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .quote {
+      text-align: center;
+      font-size: 15px;
+      color: #7e57c2;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .progress {
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #00695c;
+    }
+
+    .input-group, .filters {
+      display: flex;
+      flex-direction: column;
+      gap: 10px; margin-bottom: 20px;
+    }
+
+    input, select, button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      transition: 0.3s ease-in-out;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 8px #ba68c8;
+    }
+
+    button {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
+    }
+
+    .task {
+      background: #f3bbe2;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
+      animation: taskFade 0.5s ease;
+    }
+
+    @keyframes taskFade {
+      from {opacity: 0; transform: translateY(10px)}
+      to {opacity: 1; transform: translateY(0)}
+    }
+
+    .task:hover {
+      background-color: #e1bee7;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .priority {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .high { background: #ef5350; color: white; }
+    .medium { background: #ffca28; color: black; }
+    .low { background: #81c784; color: white; }
+
+    .actions button {
+      background: #ce93d8;
+      margin-left: 6px;
+      color: #fff;
+    }
+
+    .filters button {
+      background: #b2ebf2;
+      color: #424242;
+      font-weight: 500;
+    }
+
+    .filters button.active {
+      background: #4dd0e1;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="todo-container">
+    <h2>🌟 Magical To-Do App</h2>
+    <div class="quote" id="quote"></div>
+    <div class="progress" id="progress"></div>
+
+    <div class="input-group">
+      <input type="text" id="task" placeholder="Enter task...">
+      <input type="datetime-local" id="taskTime">
+      <select id="priority">
+        <option value="high">🔴 High</option>
+        <option value="medium">🟡 Medium</option>
+        <option value="low">🟢 Low</option>
+      </select>
+      <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <div class="filters">
+      <button onclick="filterTasks('all')" class="active">All</button>
+      <button onclick="filterTasks('completed')">Completed</button>
+      <button onclick="filterTasks('pending')">Pending</button>
+    </div>
+
+    <div id="taskList"></div>
+  </div>
+
+  <canvas class="confetti"></canvas>
+  <script>
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let currentFilter = 'all';
+    const quotes = [
+      "Every small step matters 🌼",
+      "Keep pushing forward 🚀",
+      "Stay focused and never give up 💪",
+      "Productivity is progress ✨"
+    ];
+    document.getElementById('quote').textContent = quotes[Math.floor(Math.random()*quotes.length)];
+
+    function addTask() {
+      const text = document.getElementById('task').value.trim();
+      const time = document.getElementById('taskTime').value;
+      const priority = document.getElementById('priority').value;
+      if (!text || !time) return alert('Please fill all fields');
+      tasks.push({ id: Date.now(), text, time, priority, completed: false });
+      saveAndRender();
+    }
+
+    function toggleComplete(id) {
+      tasks = tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task);
+      saveAndRender();
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(task => task.id !== id);
+      saveAndRender();
+    }
+
+    function filterTasks(type) {
+      currentFilter = type;
+      document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.filters button:nth-child(${type === 'all' ? 1 : type === 'completed' ? 2 : 3})`).classList.add('active');
+      renderTasks();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+      const filtered = tasks.filter(task => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'completed') return task.completed;
+        return !task.completed;
+      });
+      if (filtered.length === 0) {
+        list.innerHTML = '<p style="text-align:center;opacity:0.5">🌱 No tasks to show</p>';
+      }
+      let completedCount = 0;
+      filtered.forEach(task => {
+        if (task.completed) completedCount++;
+        const div = document.createElement('div');
+        div.className = `task ${task.completed ? 'completed' : ''}`;
+        div.innerHTML = `
+          <div>
+            <strong>${task.text}</strong> <span class="priority ${task.priority}">${task.priority.toUpperCase()}</span><br>
+            <small>🕒 ${new Date(task.time).toLocaleString()}</small>
+          </div>
+          <div class="actions">
+            <button onclick="toggleComplete(${task.id})">✔</button>
+            <button onclick="deleteTask(${task.id})">🗑️</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+      const total = tasks.length;
+      document.getElementById('progress').textContent = `You completed ${tasks.filter(t=>t.completed).length}/${total} tasks`;
+      if (total > 0 && tasks.every(t => t.completed)) fireConfetti();
+    }
+
+    function fireConfetti() {
+      const canvas = document.querySelector('.confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let pieces = Array.from({length:150},()=>({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*10+5,
+        d: Math.random()*5+2,
+        color: `hsl(${Math.random()*360},70%,60%)`
+      }));
+      let angle = 0;
+      function draw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        angle += 0.01;
+        pieces.forEach(p => {
+          p.y += Math.cos(angle + p.d) + 1 + p.r/2;
+          p.x += Math.sin(angle);
+          if(p.y > canvas.height) p.y = -10;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+      setTimeout(()=>canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height), 3000);
+    }
+
+    renderTasks();
+  </script>
+</body>
+</html>

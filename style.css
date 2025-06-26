@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at center, #1e1e2f, #121218);
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  animation: fadeIn 1.5s ease;
+  padding: 20px;
+}
+
+.glow-header {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3), 0 0 20px rgba(173, 216, 230, 0.3);
+  animation: softPulse 2s infinite;
+}
+
+.status-text {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #ffdf91;
+  text-shadow: 0 0 5px rgba(255, 223, 145, 0.3);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  font-size: 2rem;
+  background: #2a2a3f;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 12px rgba(240, 240, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.cell:hover {
+  background-color: #3a3a5f;
+  box-shadow: 0 0 20px rgba(173, 216, 230, 0.3);
+  transform: scale(1.05);
+}
+
+button {
+  background: linear-gradient(145deg, #ffd89b, #ff9a9e);
+  color: #212121;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(255, 138, 120, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  box-shadow: 0 0 30px rgba(255, 185, 150, 0.6);
+  transform: scale(1.05);
+}
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #ffe29a;
+  text-shadow: 0 0 5px rgba(255, 255, 200, 0.5);
+}
+@keyframes softPulse {
+  0% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.2); }
+  50% { text-shadow: 0 0 16px rgba(173, 216, 230, 0.4); }
+  100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.2); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
